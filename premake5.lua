@@ -1,10 +1,10 @@
 -- premake5.lua
-workspace "ParticleSystem"
+workspace "Application"
    architecture "x64"
    configurations { "Debug", "Release", "Dist" }
-   startproject "ParticleSystem"
+   startproject "Application"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 include "External.lua"
-include "ParticleSystem"
+include "Application"

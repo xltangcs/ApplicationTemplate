@@ -3,7 +3,7 @@
 
 #include <glm/glm.hpp>
 
-#include "Tools/Image.h"
+#include "Core/Image.h"
 
 
 class Renderer {

@@ -8,23 +8,18 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "Tools/Application.h"
-#include "Tools/Image.h"
+#include "Core/Application.h"
+#include "Core/Image.h"
 #include "Application/Renderer.h"
-
 
 
 class MyImGuiLayer : public ImGuiLayer
 {
 public:
-	MyImGuiLayer()
-	{
-
-	}
-
 	virtual void ShowUI(float ts) override
 	{
 		ImGui::Begin("Image");
+
 		static Image image2("./assets/textures/Checkerboard.png");
 		ImGui::Image((ImTextureID)image2.GetTextureID(),
 			ImVec2{ (float)image2.GetWidth(), (float)image2.GetHeight() },
@@ -35,11 +30,6 @@ public:
 
 		ImGui::Begin("Viewport");
 
-		auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
-		auto viewportMaxRegion = ImGui::GetWindowContentRegionMax();
-		auto viewportOffset = ImGui::GetWindowPos();
-		m_ViewportBounds[0] = { viewportMinRegion.x + viewportOffset.x, viewportMinRegion.y + viewportOffset.y };
-		m_ViewportBounds[1] = { viewportMaxRegion.x + viewportOffset.x, viewportMaxRegion.y + viewportOffset.y };
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 		m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
 

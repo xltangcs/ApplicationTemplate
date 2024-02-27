@@ -1,11 +1,14 @@
 # Application Template
 
+### Start
+Clone it by
+```git clone --recursive https://github.com/xltangcs/ApplicationTemplate.git```
+
 ### TO Modify
 - ./README.md
 - ./premake5.lua
 - ./Application（Folder）
 - ./Application/premake5.lua
-- ./Application/Application（Folder）
 - ./Application/src/main.cpp
 
 ### Third party libraries

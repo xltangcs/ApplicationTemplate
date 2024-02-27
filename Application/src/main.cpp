@@ -1,4 +1,8 @@
+#include <Windows.h>
+#include <cstdio>
+
 #include <memory>
+#include <vector>
 #include <iostream>
 
 #include <glad/glad.h>
@@ -8,70 +12,83 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "Core/Application.h"
 #include "Core/Image.h"
-#include "Application/Renderer.h"
-
+#include "Core/Camera.h"
+#include "Core/Application.h"
 
 class MyImGuiLayer : public ImGuiLayer
 {
 public:
-	virtual void ShowUI(float ts) override
+	MyImGuiLayer()
+		:m_Camera(45.0f, 0.1f, 100.0f)
 	{
-		ImGui::Begin("Image");
-
-		static Image image2("./assets/textures/Checkerboard.png");
-		ImGui::Image((ImTextureID)image2.GetTextureID(),
-			ImVec2{ (float)image2.GetWidth(), (float)image2.GetHeight() },
-			ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
-
-		ImGui::End();
-
-
-		ImGui::Begin("Viewport");
-
-		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-		m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
-
-		auto image = m_Renderer.GetFinalImage();
-		ImGui::Image((ImTextureID)image->GetTextureID(), viewportPanelSize, ImVec2{0, 1}, ImVec2{1, 0});
-
-		ImGui::End();
-
-		
-
-		Render();
-
+		//m_Renderer = std::make_shared<PathTracing>();
+		//m_SceneNames.push_back("Importance_Sampling");
+		//createScenePtrs.push_back(ImportanceSampling);
 	}
-
-	void Render()
-	{
-		m_Renderer.Render();
-	}
-
 
 	virtual void OnUpdate(float ts) override
 	{
-		glViewport(0, 0, (GLsizei)m_ViewportSize.x, (GLsizei)m_ViewportSize.y);
-		m_Renderer.OnResize(m_ViewportSize.x, m_ViewportSize.y);
+		int width, height;
+		auto window = Application::Get().GetGLFWwindow();
+		//glfwGetWindowSize(window, &width, &height);
+		glfwGetFramebufferSize(window, &width, &height);
+		m_Width = width; m_Height = height;
+
+		glViewport(0, 0, m_Width, m_Height);
+
+		m_Camera.OnUpdate(ts);
+		//m_Renderer->OnResize(m_Width, m_Height);
+	}
+
+	virtual void ShowUI(float ts) override
+	{
+		ImGui::Begin("Setting");
+
+		ImGui::Text("The average fps: %.3f", ImGui::GetIO().Framerate);
+
+		//ImGui::Combo("Scene", &m_SceneIndex, m_SceneNames.data(), m_SceneNames.size());
+		ImGui::Separator();
+		ImGui::DragFloat3("Camera Position", glm::value_ptr(m_Camera.GetPosition()));
+		ImGui::DragFloat3("Camera Direction", glm::value_ptr(m_Camera.GetDirection()));
+		ImGui::Checkbox("Camera Rotation", &m_Camera.GetIsRotation());
+
+		ImGui::End();
+	}
+
+	virtual void Render(float ts) override
+	{
+		//if (m_CurrentIndex != m_SceneIndex)
+		//{
+		//	m_CurrentIndex = m_SceneIndex;
+		//	m_Scene = createScenePtrs[m_CurrentIndex]();
+		//	//m_Renderer->isNewScene = true;
+		//}
+		//m_Renderer->Render(m_Camera, m_Scene);
+		//m_Renderer->isNewScene = false;
 	}
 
 private:
-	glm::vec2 m_ViewportSize = { 0.0f, 0.0f };
-	glm::vec2 m_ViewportBounds[2];
+	unsigned int m_Width = 0, m_Height = 0;
 
-	Renderer m_Renderer;
+	//std::shared_ptr<PathTracing> m_Renderer;
+	//Scene m_Scene;
+	//std::vector<const char*> m_SceneNames;
+	//std::vector<Scene(*)()> createScenePtrs;
+
+	int m_SceneIndex = 0;
+	int m_CurrentIndex = -1;
+	Camera m_Camera;
 };
 
 
 int main()
 {
-	static Application* ParticleSystem = new Application("App"); //modify
+	static Application* RayTracing = new Application("PathTracing");
 	std::shared_ptr<MyImGuiLayer> myimguilayer = std::make_shared<MyImGuiLayer>();
 
-	ParticleSystem->PushImGuiLayer(myimguilayer);
-
-	ParticleSystem->Run();
+	RayTracing->PushImGuiLayer(myimguilayer);
+	RayTracing->Run();
 
 	return 0;
 }

@@ -2,7 +2,11 @@
 
 ### Start
 Clone it by
-```git clone --recursive https://github.com/xltangcs/ApplicationTemplate.git```
+```Bash
+git clone --recursive https://github.com/xltangcs/ApplicationTemplate.git
+cd ApplicationTemplate
+./scripts/restart.bat NoDockspace
+```
 
 ### TO Modify
 - ./README.md

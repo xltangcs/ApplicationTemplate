@@ -3,8 +3,7 @@
 pushd ..
 
 git checkout --orphan latest_branch
-git add .
-git branch -D main
+git branch -D %1%
 git branch -m main
 
 git remote rm origin
